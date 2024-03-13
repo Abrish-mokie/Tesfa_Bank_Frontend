@@ -1,8 +1,9 @@
 name: front_end
-description: 'A new Flutter project.'
+
+description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,7 +20,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.2.5 <4.0.0'
+  sdk: ">=3.2.5 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -45,7 +46,42 @@ dependencies:
   shared_preferences: ^2.2.2
 
   #This package is to perform actions after the first layout is done
-  after_layout: ^1.2.0
+  after_layout:
+    ^1.2.0
+
+    # app level routing package
+  go_router: ^13.1.0
+  # for creating a notification message from the app
+  fluttertoast: ^8.2.4
+  # River pod state management in the app level
+  hooks_riverpod: ^2.4.10
+
+  riverpod_annotation: ^2.3.4
+  #for adding google font
+  google_fonts: 6.1.0
+  #
+  freezed_annotation: ^2.4.1
+
+  # firebase
+  firebase_auth: ^4.17.3
+  firebase_core: ^2.25.4
+
+  # functional programming
+  dartz: ^0.10.1
+
+  # Country code picker
+  country_code_picker: ^3.0.0
+  #Country picker
+  csc_picker: ^0.2.7
+
+  #COuntry state city picker
+  country_state_city_pro: ^0.0.6
+
+  # Provides internationalization and localization facilities
+  intl: ^0.19.0
+
+  # flutter expandable floatinga action button
+  flutter_expandable_fab: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -56,7 +92,15 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+
+  flutter_lints: ^3.0.1
+  riverpod_generator: ^2.3.11
+  riverpod_lint: ^2.3.9
+  freezed: ^2.4.7
+  build_runner: ^2.4.8
+
+  #For checking the internet connectivity status
+  connectivity_plus: ^5.0.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -70,10 +114,10 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - lib/assets/Onboarding/Onboarding_image_1.png
-    - lib/assets/Onboarding/Onboarding_image_2.png
-    - lib/assets/Onboarding/Onboarding_image_3.png
-    - lib/assets/Splash/Splash.png
+    - assets/images/auth/
+    - assets/images/onboarding/
+    - assets/images/splash/
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

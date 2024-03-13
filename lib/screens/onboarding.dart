@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:front_end/provider/shared_utility.dart';
 import 'package:front_end/widgets/Onboarding/onboarding_page_view.dart';
+import 'package:front_end/widgets/custom_button.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class Onboarding extends StatefulWidget {
+class Onboarding extends ConsumerStatefulWidget {
   const Onboarding({super.key});
 
   @override
-  State<Onboarding> createState() => _OnboardingState();
+  OnboardingState createState() => OnboardingState();
 }
 
-class _OnboardingState extends State<Onboarding> {
+class OnboardingState extends ConsumerState<Onboarding> {
   final pageController = PageController(initialPage: 0);
   var _skipButtonContent = 'Skip';
 
@@ -26,7 +30,9 @@ class _OnboardingState extends State<Onboarding> {
       if (index == 2) {
         _skipButtonContent = 'Get Started';
       }
-      print(index);
+      else {
+        _skipButtonContent = 'Skip';
+      }
     });
   }
 
@@ -51,17 +57,17 @@ class _OnboardingState extends State<Onboarding> {
               },
               children: const [
                 OnboardingWidget(
-                    image: 'lib/assets/Onboarding/Onboarding_image_1.png',
+                    image: 'assets/images/onboarding/Onboarding_image_1.png',
                     title: 'Easy, Fast & Trusted',
                     subTitle:
                         'Fast money transfer and guaranteed safe transactions with others'),
                 OnboardingWidget(
-                    image: 'lib/assets/Onboarding/Onboarding_image_2.png',
+                    image: 'assets/images/onboarding/Onboarding_image_2.png',
                     title: 'Saving your Money',
                     subTitle:
                         'Track the progress of your savings and start a habit of saving with us'),
                 OnboardingWidget(
-                    image: 'lib/assets/Onboarding/Onboarding_image_3.png',
+                    image: 'assets/images/onboarding/Onboarding_image_3.png',
                     title: 'Free Transactions',
                     subTitle:
                         'Provides a quality of the financial system with free money transactions without any fees'),
@@ -82,12 +88,15 @@ class _OnboardingState extends State<Onboarding> {
           Positioned(
             bottom: 35,
             right: 30,
-            child: ElevatedButton(
-              onPressed: () {},
-              child: Text(
+            child: CustomButton(
+              isDisabled: false,
+              onPressed: () {
+                ref.watch(sharedUtilityProvider).setSeen();
+                context.go('/auth');
+              },
+              title:
                 _skipButtonContent,
-                style: TextStyle(color: Colors.black),
-              ),
+
             ),
           )
         ],
