@@ -106,12 +106,14 @@ List<BottomNavigationBarItem> get bottomNavigationBarItems {
         icon: Icon(
           Icons.home,
         ),
-        label: "Home"),
+        // label: "Home"),
+        label: ""),
     BottomNavigationBarItem(
         icon: Icon(
-          Icons.settings,
+          Icons.history,
         ),
-        label: "Setting"),
+        // label: "Transactions"),
+        label: ""),
     BottomNavigationBarItem(
         icon: Icon(
           Icons.send,
@@ -122,12 +124,14 @@ List<BottomNavigationBarItem> get bottomNavigationBarItems {
         icon: Icon(
           Icons.settings,
         ),
-        label: "Setting"),
+        label: ""),
+    // label: "Setting"),
     BottomNavigationBarItem(
         icon: Icon(
           Icons.person,
         ),
-        label: "Profile")
+        // label: "Profile")
+        label: "")
   ];
 }
 
