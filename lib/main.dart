@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:front_end/firebase_options.dart';
 import 'package:front_end/provider/shared_utility.dart';
+import 'package:front_end/screens/Password%20Reset/password_reset.dart';
+import 'package:front_end/screens/Password%20Reset/password_reset_firebase.dart';
 import 'package:front_end/screens/auth/Auth.dart';
 import 'package:front_end/screens/home.dart';
 import 'package:front_end/screens/login.dart';
@@ -10,7 +12,6 @@ import 'package:front_end/screens/onboarding.dart';
 import 'package:front_end/screens/signup/signup_address.dart';
 import 'package:front_end/screens/signup/signup_personal.dart';
 import 'package:front_end/screens/signup/signup_stepper.dart';
-import 'package:front_end/screens/splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -80,6 +81,13 @@ class MyAppState extends ConsumerState<MyApp> {
             path: '/auth',
             builder: (BuildContext context, GoRouterState state) {
               return const Auth();
+            },
+          ),
+          //For reset Password
+          GoRoute(
+            path: '/password_reset',
+            builder: (BuildContext context, GoRouterState state) {
+              return PasswordReset();
             },
           ),
           GoRoute(
