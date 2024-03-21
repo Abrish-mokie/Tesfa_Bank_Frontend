@@ -48,7 +48,9 @@ class _ResetPasswordState extends State<ResetPassword> {
     newPasswordTest = false;
     if (NewPassword.value.text.toString() ==
         ConfirmPassword.value.text.toString()) {
-      print('inside success');
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Password reset')));
       context.go('/login');
     } else {
       print('inside mismatch');
