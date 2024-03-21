@@ -2,16 +2,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:front_end/firebase_options.dart';
+import 'package:front_end/globals/theme/app_theme.dart';
 import 'package:front_end/provider/shared_utility.dart';
 import 'package:front_end/screens/Password%20Reset/password_reset.dart';
 import 'package:front_end/screens/Password%20Reset/password_reset_firebase.dart';
 import 'package:front_end/screens/auth/Auth.dart';
-import 'package:front_end/screens/home.dart';
-import 'package:front_end/screens/login.dart';
-import 'package:front_end/screens/onboarding.dart';
+import 'package:front_end/screens/home/home.dart';
+import 'package:front_end/screens/auth/login.dart';
+import 'package:front_end/screens/intro/onboarding.dart';
 import 'package:front_end/screens/signup/signup_address.dart';
 import 'package:front_end/screens/signup/signup_personal.dart';
 import 'package:front_end/screens/signup/signup_stepper.dart';
+import 'package:front_end/screens/intro/splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -32,7 +34,7 @@ void main() async {
   runApp(ProviderScope(overrides: [
     // override the previous value with the new object
     sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-  ], child: MyApp()));
+  ], child: const MyApp()));
 }
 
 class MyApp extends ConsumerStatefulWidget {
@@ -49,6 +51,7 @@ class MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       theme: ThemeData(
+          useMaterial3: true,
           textTheme: GoogleFonts.dmSansTextTheme(Theme.of(context).textTheme),
           colorScheme:
               const ColorScheme.light().copyWith(primary: Colors.black)),

@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import 'package:front_end/screens/error.dart';
-import 'package:front_end/screens/home.dart';
+import 'package:front_end/screens/home/home.dart';
 import 'package:front_end/screens/loading.dart';
-import 'package:front_end/screens/login.dart';
+import 'package:front_end/screens/auth/login.dart';
 
 
 
