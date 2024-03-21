@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import '../widgets/custom_text_field.dart';
+import '../../widgets/custom_text_field.dart';
 
 final isLoadingProvider = StateProvider<bool>((ref) {
   return false;

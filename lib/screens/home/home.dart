@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:front_end/screens/deposit.dart';
+import 'package:front_end/models/transaction.dart';
+import 'package:front_end/screens/transaction/deposit.dart';
 import 'package:front_end/screens/home/dashboard.dart';
-import 'package:front_end/screens/login.dart';
-import 'package:front_end/screens/pay.dart';
-import 'package:front_end/screens/profile.dart';
-import 'package:front_end/screens/send.dart';
-import 'package:front_end/screens/setting.dart';
-import 'package:front_end/screens/transfer.dart';
+import 'package:front_end/screens/auth/login.dart';
+import 'package:front_end/screens/transaction/pay.dart';
+import 'package:front_end/screens/settings/profile.dart';
+import 'package:front_end/screens/transaction/send.dart';
+import 'package:front_end/screens/settings/setting.dart';
+import 'package:front_end/screens/transaction/transaction_history.dart';
+import 'package:front_end/screens/transaction/transfer.dart';
 
 import 'dart:math' as math;
 
@@ -79,9 +81,9 @@ class HomeState extends ConsumerState<Home> {
   Widget _buildBody() {
     switch (ref.watch(currentIndexProvider)) {
       case 0:
-        return const Dashboard();
+        return Dashboard();
       case 1:
-        return const Setting();
+        return const TransactionHistory();
       case 2:
         return const Login();
       case 3:
@@ -99,6 +101,8 @@ class HomeState extends ConsumerState<Home> {
     }
   }
 }
+
+//bottom navigation menu items
 
 List<BottomNavigationBarItem> get bottomNavigationBarItems {
   return const [
