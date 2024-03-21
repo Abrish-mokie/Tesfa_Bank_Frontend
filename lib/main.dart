@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:front_end/firebase_options.dart';
 import 'package:front_end/globals/theme/app_theme.dart';
 import 'package:front_end/provider/shared_utility.dart';
+import 'package:front_end/screens/Password%20Reset/password_reset.dart';
+import 'package:front_end/screens/Password%20Reset/password_reset_firebase.dart';
 import 'package:front_end/screens/auth/Auth.dart';
 import 'package:front_end/screens/home/home.dart';
 import 'package:front_end/screens/auth/login.dart';
@@ -82,6 +84,13 @@ class MyAppState extends ConsumerState<MyApp> {
             path: '/auth',
             builder: (BuildContext context, GoRouterState state) {
               return const Auth();
+            },
+          ),
+          //For reset Password
+          GoRoute(
+            path: '/password_reset',
+            builder: (BuildContext context, GoRouterState state) {
+              return PasswordReset();
             },
           ),
           GoRoute(

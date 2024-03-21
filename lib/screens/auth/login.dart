@@ -14,7 +14,8 @@ final isLoadingProvider = StateProvider<bool>((ref) {
 });
 
 class Login extends HookConsumerWidget {
-  const Login({super.key});
+  const Login({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final email = useTextEditingController();
@@ -50,9 +51,7 @@ class Login extends HookConsumerWidget {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  const SizedBox(
-                    height: 121,
-                  ),
+                  const SizedBox(height: 121),
                   SizedBox(
                     width: 94,
                     height: 121,
@@ -61,21 +60,18 @@ class Login extends HookConsumerWidget {
                       fit: BoxFit.fill,
                     ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 10),
                   const Text(
                     "Tesfa Bank",
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(
-                    height: 50,
-                  ),
+                  const SizedBox(height: 50),
                   Padding(
                     padding: const EdgeInsets.all(30.0),
                     child: SingleChildScrollView(
                       child: Column(
                         children: <Widget>[
+                          // Email TextField
                           Consumer(
                             builder: (context, ref, _) {
                               final emailField = ref
@@ -87,17 +83,13 @@ class Login extends HookConsumerWidget {
                                     .read(loginFormNotifierProvider.notifier)
                                     .setEmail(value),
                                 controller: email,
-                                // hintText: 'Email',
                                 labelText: "Enter your Email",
                                 errorMessage: emailField.errorMessage,
                               );
                             },
                           ),
-
-                          const SizedBox(
-                            height: 20,
-                          ),
-
+                          const SizedBox(height: 20),
+                          // Password TextField
                           Consumer(
                             builder: (context, ref, _) {
                               final passwordField = ref
@@ -110,47 +102,38 @@ class Login extends HookConsumerWidget {
                                     .read(loginFormNotifierProvider.notifier)
                                     .setPassword(value),
                                 controller: password,
-                                // hintText: 'Email',
                                 labelText: "Enter your Password",
                                 errorMessage: passwordField.errorMessage,
                               );
                             },
                           ),
-                          const SizedBox(
-                            height: 5,
+                          const SizedBox(height: 20),
+                          // Navigation Buttons
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const Text('Not a member?'),
+                              TextButton(
+                                onPressed: () => context.go("/signup"),
+                                child: Text(
+                                  'Sign Up',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue.shade300),
+                                ),
+                              ),
+                              const SizedBox(width: 30),
+                              TextButton(
+                                onPressed: () => context.go("/password_reset"),
+                                child: Text('Forgot Password?',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blue.shade300)),
+                              ),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Row(
-                              children: <Widget>[
-                                // Checkbox(
-                                //   value: false,
-                                //   onChanged: null,
-                                // ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TextButton(
-                                        onPressed: () =>
-                                            {context.go("/signup")},
-                                        child: const Row(
-                                          children: [
-                                            Text('Not a member? '),
-                                            Text(
-                                              'Sign Up',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ],
-                                        )),
-                                    const Text('Forgot Password?'),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 100),
+                          const SizedBox(height: 20),
+                          // Sign In Button
                           Center(
                             child: Consumer(builder: (context, ref, _) {
                               final field =
@@ -158,13 +141,12 @@ class Login extends HookConsumerWidget {
                               return CustomButton(
                                 isDisabled: !(field.password.isValid &&
                                     field.email.isValid),
-                                // backgroundColor: Colors.black,
                                 title: 'Sign in',
-                                loading: ref
-                                    .watch(authNotifierProvider)
-                                    .maybeWhen(
-                                        orElse: () => false,
-                                        loading: () => true),
+                                loading:
+                                    ref.watch(authNotifierProvider).maybeWhen(
+                                          orElse: () => false,
+                                          loading: () => true,
+                                        ),
                                 onPressed: () => ref
                                     .read(authNotifierProvider.notifier)
                                     .login(
@@ -174,21 +156,6 @@ class Login extends HookConsumerWidget {
                               );
                             }),
                           ),
-
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.center,
-                          //   children: [
-                          //     const Text("Not a member? "),
-                          //     TextButton(
-                          //         onPressed: () => {
-                          //           context.go('/signup')
-                          //               // Navigator.of(context).push(
-                          //               //     MaterialPageRoute(
-                          //               //         builder: (context) => SignUp()))
-                          //             },
-                          //         child: const Text("Register Now")),
-                          //   ],
-                          // )
                         ],
                       ),
                     ),
