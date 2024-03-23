@@ -37,7 +37,7 @@ class HomeState extends ConsumerState<Home> {
     return Scaffold(
         floatingActionButtonLocation: centerDocked,
         floatingActionButton: ExpandableFab(
-          distance: 50, //112
+          distance: 112,
           children: [
             expandableButtons(Icons.send, "Pay", 8),
             expandableButtons(Icons.payment, "Send Money", 7),
@@ -403,7 +403,7 @@ class ActionButton extends StatelessWidget {
       child: IconButton(
         onPressed: onPressed,
         icon: icon,
-        color: theme.colorScheme.onSecondary,
+        // color: theme.colorScheme.onSecondary,
       ),
     );
   }
