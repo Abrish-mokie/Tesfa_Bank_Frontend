@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:front_end/provider/auth/authentication_provider.dart';
 import 'package:front_end/provider/auth/login_form_provider.dart';
 
@@ -23,25 +24,27 @@ class Login extends HookConsumerWidget {
 
     ref.listen(authNotifierProvider, (previous, next) {
       next.maybeWhen(
-        orElse: () => null,
-        authenticated: (user) {
-          // Navigate to dashboard screen
-          context.go("/dashboard");
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('User Logged In'),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-        },
-        unauthenticated: (message) =>
-            ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(message!),
-            behavior: SnackBarBehavior.floating,
-          ),
-        ),
-      );
+          orElse: () => null,
+          authenticated: (user) {
+            // Navigate to dashboard screen
+            context.go("/dashboard");
+            Fluttertoast.showToast(
+                msg: "User Logged In",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                // backgroundColor: Colors.red,
+                // textColor: Colors.white,
+                fontSize: 16.0);
+          },
+          unauthenticated: (message) => Fluttertoast.showToast(
+              msg: message.toString(),
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              // backgroundColor: Colors.red,
+              // textColor: Colors.white,
+              fontSize: 16.0));
     });
 
     return SafeArea(
