@@ -11,42 +11,58 @@ class Dashboard extends StatelessWidget {
     Transaction(
       name: 'Robert Fox',
       date: '23 January 2021',
-      amount: '-396.84',
+      amount: '396.84',
+      imageUrl: "assets/images/dummy/image-placeholder-2.png",
+      isWithdraw: true,
     ),
     Transaction(
       name: 'Robert Fox',
       date: '23 January 2021',
-      amount: '-396.84',
+      amount: '396.84',
+      imageUrl: "assets/images/dummy/image-placeholder-1.png",
+      isWithdraw: true,
     ),
     Transaction(
       name: 'Robert Fox',
       date: '23 January 2021',
-      amount: '-396.84',
+      amount: '396.84',
+      imageUrl: "assets/images/dummy/image-placeholder-3.png",
+      isWithdraw: false,
     ),
     Transaction(
       name: 'Robert Fox',
       date: '23 January 2021',
-      amount: '-396.84',
+      amount: '396.84',
+      imageUrl: "assets/images/dummy/image-placeholder.png",
+      isWithdraw: true,
     ),
     Transaction(
       name: 'Robert Fox',
       date: '23 January 2021',
-      amount: '-396.84',
+      amount: '396.84',
+      imageUrl: "assets/images/dummy/image-placeholder-1.png",
+      isWithdraw: true,
     ),
     Transaction(
       name: 'Robert Fox',
       date: '23 January 2021',
-      amount: '-396.84',
+      amount: '396.84',
+      imageUrl: "assets/images/dummy/image-placeholder-2.png",
+      isWithdraw: false,
     ),
     Transaction(
       name: 'Robert Fox',
       date: '23 January 2021',
-      amount: '-396.84',
+      amount: '396.84',
+      imageUrl: "assets/images/dummy/image-placeholder-3.png",
+      isWithdraw: true,
     ),
     Transaction(
-      name: 'berhan Adhana',
+      name: 'Berhan Adhana',
       date: '23 January 2021',
-      amount: '-396.84',
+      amount: '396.84',
+      imageUrl: "assets/images/dummy/image-placeholder.png",
+      isWithdraw: false,
     ),
   ];
 
@@ -88,9 +104,11 @@ class Dashboard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       _SeeAll(
-                          label: "Send to ",
+                          label: "Send To ",
                           buttonLabel: "See all",
-                          onPressed: () {}),
+                          onPressed: () {
+                            Fluttertoast.showToast(msg: "Got to Send To Page");
+                          }),
                       SizedBox(
                         height: 100,
                         child: ListView(
@@ -139,7 +157,10 @@ class Dashboard extends StatelessWidget {
                       _SeeAll(
                           label: "History Transaction ",
                           buttonLabel: "See all",
-                          onPressed: () {}),
+                          onPressed: () {
+                            Fluttertoast.showToast(
+                                msg: "Got to History Transaction Page");
+                          }),
                       Expanded(
                         child: ListView.builder(
                           physics: const ScrollPhysics(),
@@ -153,16 +174,19 @@ class Dashboard extends StatelessWidget {
                                     msg:
                                         "${transaction.name} transaction is clicked");
                               },
-                              leading: Image.asset(
-                                  "assets/images/dummy/image-placeholder-1.png"),
+                              leading: Image.asset(transaction.imageUrl),
                               title: Text(transaction.name),
                               subtitle: Text(
                                 transaction.date,
                                 style: const TextStyle(color: Colors.black45),
                               ),
                               trailing: Text(
-                                "\$" + transaction.amount,
-                                style: const TextStyle(fontSize: 14.0),
+                                "${transaction.isWithdraw ? "-" : "+"}\$${transaction.amount}",
+                                style: TextStyle(
+                                    fontSize: 14.0,
+                                    color: transaction.isWithdraw
+                                        ? Colors.red
+                                        : null),
                               ),
                             );
                           },
@@ -192,13 +216,13 @@ class Dashboard extends StatelessWidget {
               // origin: Offset.zero,
               child: IconButton(
                   onPressed: () {
-                    Fluttertoast.showToast(msg: "clicked");
+                    Fluttertoast.showToast(msg: "$label clicked");
                   },
                   icon: Icon(icon)),
             )),
         Text(
           label,
-          style: const TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5)),
+          style: const TextStyle(color: Colors.grey),
         ),
       ],
     );
@@ -206,7 +230,7 @@ class Dashboard extends StatelessWidget {
 }
 
 class _SeeAll extends StatelessWidget {
-  const _SeeAll({
+  _SeeAll({
     super.key,
     required this.label,
     required this.buttonLabel,
@@ -215,20 +239,23 @@ class _SeeAll extends StatelessWidget {
 
   final String label;
   final String buttonLabel;
-  final Function onPressed;
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Text(
         label,
-        style: Theme.of(context).textTheme.bodyMedium,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
+        ),
       ),
       TextButton(
-        onPressed: onPressed(),
+        onPressed: onPressed,
         child: Text(buttonLabel,
             style: TextStyle(
-                fontSize: 14,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).hintColor)),
       ),
@@ -270,7 +297,7 @@ class CustomContainer extends StatelessWidget {
               ? null
               : DecorationImage(
                   fit: BoxFit.cover, image: AssetImage(image ?? "")),
-          border: Border.all(width: 2.0, color: Colors.black12),
+          border: Border.all(width: 2.0, color: Colors.black38),
           borderRadius: BorderRadius.circular(8.0)),
       width: 56,
       height: 56,
