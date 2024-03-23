@@ -28,6 +28,8 @@ class _AccordionCardState extends State<AccordionCard> {
       },
       children: _data.map<ExpansionPanel>((Item item) {
         return ExpansionPanel(
+          backgroundColor: Theme.of(context).colorScheme.background,
+          canTapOnHeader: true,
           headerBuilder: (BuildContext context, bool isExpanded) {
             return const ListTile(
               title: Row(

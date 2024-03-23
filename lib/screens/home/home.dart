@@ -37,7 +37,7 @@ class HomeState extends ConsumerState<Home> {
     return Scaffold(
         floatingActionButtonLocation: centerDocked,
         floatingActionButton: ExpandableFab(
-          distance: 112,
+          distance: 50, //112
           children: [
             expandableButtons(Icons.send, "Pay", 8),
             expandableButtons(Icons.payment, "Send Money", 7),
@@ -47,8 +47,8 @@ class HomeState extends ConsumerState<Home> {
         ),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          unselectedItemColor: Colors.black54,
-          selectedItemColor: Colors.black,
+          // unselectedItemColor: Colors.black54,
+          // selectedItemColor: Colors.black,
           // unselectedLabelStyle: const TextStyle(color: Colors.red),
           currentIndex: ref.watch(currentIndexProvider) > 4
               ? 2
@@ -121,7 +121,7 @@ List<BottomNavigationBarItem> get bottomNavigationBarItems {
     BottomNavigationBarItem(
         icon: Icon(
           Icons.send,
-          size: 10.0,
+          size: 0.0,
         ),
         label: ""),
     BottomNavigationBarItem(
@@ -156,6 +156,7 @@ class _CenterDockedFloatingActionButtonLocation
 abstract class _DockedFloatingActionButtonLocation
     extends FloatingActionButtonLocation {
   const _DockedFloatingActionButtonLocation();
+
   @protected
   double getDockedY(ScaffoldPrelayoutGeometry scaffoldGeometry) {
     final double contentBottom = scaffoldGeometry.contentBottom;
@@ -164,16 +165,27 @@ abstract class _DockedFloatingActionButtonLocation
     final double snackBarHeight = scaffoldGeometry.snackBarSize.height;
 
     double fabY = contentBottom - fabHeight / 4.0;
-    if (snackBarHeight > 0.0)
-      fabY = math.min(
-          fabY,
-          contentBottom -
-              snackBarHeight -
-              fabHeight -
-              kFloatingActionButtonMargin);
-    if (appBarHeight > 0.0)
-      fabY = math.min(fabY, contentBottom - appBarHeight - fabHeight / 3.0);
 
+    // Adjust fabY to accommodate SnackBar
+    if (snackBarHeight > 0.0) {
+      fabY = math.min(
+        fabY,
+        contentBottom -
+            snackBarHeight -
+            fabHeight -
+            kFloatingActionButtonMargin,
+      );
+    }
+
+    // Adjust fabY to accommodate AppBar
+    if (appBarHeight > 0.0) {
+      fabY = math.min(
+        fabY,
+        contentBottom - appBarHeight - fabHeight / 3.0,
+      );
+    }
+
+    // Ensure FloatingActionButton doesn't go off-screen
     final double maxFabY = scaffoldGeometry.scaffoldSize.height - fabHeight;
     return math.min(maxFabY, fabY);
   }
@@ -386,7 +398,7 @@ class ActionButton extends StatelessWidget {
     return Material(
       shape: const CircleBorder(),
       clipBehavior: Clip.antiAlias,
-      color: theme.colorScheme.secondary,
+      // color: theme.colorScheme.secondary,
       elevation: 4,
       child: IconButton(
         onPressed: onPressed,

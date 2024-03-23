@@ -54,6 +54,7 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: Column(
           children: [
             AccordionCard(),
@@ -86,7 +87,10 @@ class Dashboard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      seeAll("Send to ", "See all", () {}),
+                      _SeeAll(
+                          label: "Send to ",
+                          buttonLabel: "See all",
+                          onPressed: () {}),
                       SizedBox(
                         height: 100,
                         child: ListView(
@@ -132,7 +136,10 @@ class Dashboard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      seeAll("History Transaction ", "See all", () {}),
+                      _SeeAll(
+                          label: "History Transaction ",
+                          buttonLabel: "See all",
+                          onPressed: () {}),
                       Expanded(
                         child: ListView.builder(
                           physics: const ScrollPhysics(),
@@ -172,23 +179,6 @@ class Dashboard extends StatelessWidget {
     );
   }
 
-  Row seeAll(String label, String buttonLabel, Function onPressed) {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Text(
-        label,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-      ),
-      TextButton(
-        onPressed: onPressed(),
-        child: Text(buttonLabel,
-            style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.black45)),
-      ),
-    ]);
-  }
-
   Widget quickButtons(Function onPressed, String label, IconData? icon,
       {bool isangled = false, String? imageUri}) {
     return Column(
@@ -206,9 +196,43 @@ class Dashboard extends StatelessWidget {
                   },
                   icon: Icon(icon)),
             )),
-        Text(label),
+        Text(
+          label,
+          style: const TextStyle(color: Color.fromRGBO(0, 0, 0, 0.5)),
+        ),
       ],
     );
+  }
+}
+
+class _SeeAll extends StatelessWidget {
+  const _SeeAll({
+    super.key,
+    required this.label,
+    required this.buttonLabel,
+    required this.onPressed,
+  });
+
+  final String label;
+  final String buttonLabel;
+  final Function onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Text(
+        label,
+        style: Theme.of(context).textTheme.bodyMedium,
+      ),
+      TextButton(
+        onPressed: onPressed(),
+        child: Text(buttonLabel,
+            style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).hintColor)),
+      ),
+    ]);
   }
 }
 
@@ -246,7 +270,7 @@ class CustomContainer extends StatelessWidget {
               ? null
               : DecorationImage(
                   fit: BoxFit.cover, image: AssetImage(image ?? "")),
-          border: Border.all(width: 2.0, color: Colors.black54),
+          border: Border.all(width: 2.0, color: Colors.black12),
           borderRadius: BorderRadius.circular(8.0)),
       width: 56,
       height: 56,
