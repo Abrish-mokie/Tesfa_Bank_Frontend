@@ -51,7 +51,7 @@ class _AccordionCardState extends State<AccordionCard> {
                     width: 80,
                   ),
                   Text(
-                    "5,754.47",
+                    "90,000",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   )
                 ],
@@ -60,13 +60,29 @@ class _AccordionCardState extends State<AccordionCard> {
           },
           body: const Column(children: [
             ListTile(
-              title: Text("Every Day Saving"),
-              trailing: Text("40000"),
+              title: Text(
+                "Every Day Saving",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              trailing: Text(
+                "40000",
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
             ),
             Divider(),
             ListTile(
-              title: Text("Every Day Chequing"),
-              trailing: Text("50000"),
+              title: Text(
+                "Every Day Chequing",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              trailing: Text(
+                "50000",
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
             ),
           ]),
           isExpanded: item.isExpanded,
