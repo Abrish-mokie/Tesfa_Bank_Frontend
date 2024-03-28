@@ -11,42 +11,58 @@ class Dashboard extends StatelessWidget {
     Transaction(
       name: 'Robert Fox',
       date: '23 January 2021',
-      amount: '-396.84',
+      amount: '396.84',
+      imageUrl: "assets/images/dummy/image-placeholder-2.png",
+      isWithdraw: true,
     ),
     Transaction(
       name: 'Robert Fox',
       date: '23 January 2021',
-      amount: '-396.84',
+      amount: '396.84',
+      imageUrl: "assets/images/dummy/image-placeholder-1.png",
+      isWithdraw: true,
     ),
     Transaction(
       name: 'Robert Fox',
       date: '23 January 2021',
-      amount: '-396.84',
+      amount: '396.84',
+      imageUrl: "assets/images/dummy/image-placeholder-3.png",
+      isWithdraw: false,
     ),
     Transaction(
       name: 'Robert Fox',
       date: '23 January 2021',
-      amount: '-396.84',
+      amount: '396.84',
+      imageUrl: "assets/images/dummy/image-placeholder.png",
+      isWithdraw: true,
     ),
     Transaction(
       name: 'Robert Fox',
       date: '23 January 2021',
-      amount: '-396.84',
+      amount: '396.84',
+      imageUrl: "assets/images/dummy/image-placeholder-1.png",
+      isWithdraw: true,
     ),
     Transaction(
       name: 'Robert Fox',
       date: '23 January 2021',
-      amount: '-396.84',
+      amount: '396.84',
+      imageUrl: "assets/images/dummy/image-placeholder-2.png",
+      isWithdraw: false,
     ),
     Transaction(
       name: 'Robert Fox',
       date: '23 January 2021',
-      amount: '-396.84',
+      amount: '396.84',
+      imageUrl: "assets/images/dummy/image-placeholder-3.png",
+      isWithdraw: true,
     ),
     Transaction(
-      name: 'berhan Adhana',
+      name: 'Berhan Adhana',
       date: '23 January 2021',
-      amount: '-396.84',
+      amount: '396.84',
+      imageUrl: "assets/images/dummy/image-placeholder.png",
+      isWithdraw: false,
     ),
   ];
 
@@ -54,6 +70,7 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: Column(
           children: [
             AccordionCard(),
@@ -86,7 +103,12 @@ class Dashboard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      seeAll("Send to ", "See all", () {}),
+                      _SeeAll(
+                          label: "Send To ",
+                          buttonLabel: "See all",
+                          onPressed: () {
+                            Fluttertoast.showToast(msg: "Got to Send To Page");
+                          }),
                       SizedBox(
                         height: 100,
                         child: ListView(
@@ -132,7 +154,13 @@ class Dashboard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      seeAll("History Transaction ", "See all", () {}),
+                      _SeeAll(
+                          label: "History Transaction ",
+                          buttonLabel: "See all",
+                          onPressed: () {
+                            Fluttertoast.showToast(
+                                msg: "Got to History Transaction Page");
+                          }),
                       Expanded(
                         child: ListView.builder(
                           physics: const ScrollPhysics(),
@@ -146,16 +174,19 @@ class Dashboard extends StatelessWidget {
                                     msg:
                                         "${transaction.name} transaction is clicked");
                               },
-                              leading: Image.asset(
-                                  "assets/images/dummy/image-placeholder-1.png"),
+                              leading: Image.asset(transaction.imageUrl),
                               title: Text(transaction.name),
                               subtitle: Text(
                                 transaction.date,
                                 style: const TextStyle(color: Colors.black45),
                               ),
                               trailing: Text(
-                                "\$" + transaction.amount,
-                                style: const TextStyle(fontSize: 14.0),
+                                "${transaction.isWithdraw ? "-" : "+"}\$${transaction.amount}",
+                                style: TextStyle(
+                                    fontSize: 14.0,
+                                    color: transaction.isWithdraw
+                                        ? Colors.red
+                                        : null),
                               ),
                             );
                           },
@@ -172,23 +203,6 @@ class Dashboard extends StatelessWidget {
     );
   }
 
-  Row seeAll(String label, String buttonLabel, Function onPressed) {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Text(
-        label,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-      ),
-      TextButton(
-        onPressed: onPressed(),
-        child: Text(buttonLabel,
-            style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.black45)),
-      ),
-    ]);
-  }
-
   Widget quickButtons(Function onPressed, String label, IconData? icon,
       {bool isangled = false, String? imageUri}) {
     return Column(
@@ -202,13 +216,50 @@ class Dashboard extends StatelessWidget {
               // origin: Offset.zero,
               child: IconButton(
                   onPressed: () {
-                    Fluttertoast.showToast(msg: "clicked");
+                    Fluttertoast.showToast(msg: "$label clicked");
                   },
                   icon: Icon(icon)),
             )),
-        Text(label),
+        Text(
+          label,
+          style: const TextStyle(color: Colors.grey),
+        ),
       ],
     );
+  }
+}
+
+class _SeeAll extends StatelessWidget {
+  _SeeAll({
+    super.key,
+    required this.label,
+    required this.buttonLabel,
+    required this.onPressed,
+  });
+
+  final String label;
+  final String buttonLabel;
+  final void Function()? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Text(
+        label,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
+        ),
+      ),
+      TextButton(
+        onPressed: onPressed,
+        child: Text(buttonLabel,
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).hintColor)),
+      ),
+    ]);
   }
 }
 
@@ -246,7 +297,7 @@ class CustomContainer extends StatelessWidget {
               ? null
               : DecorationImage(
                   fit: BoxFit.cover, image: AssetImage(image ?? "")),
-          border: Border.all(width: 2.0, color: Colors.black54),
+          border: Border.all(width: 2.0, color: Colors.black38),
           borderRadius: BorderRadius.circular(8.0)),
       width: 56,
       height: 56,

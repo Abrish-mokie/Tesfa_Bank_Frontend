@@ -83,9 +83,10 @@ class CustomButton extends StatelessWidget {
           constraints: _constraints,
           child: Ink(
               decoration: ShapeDecoration(
-                shape: _shape,
-                color: isDisabled ? Colors.grey : backgroundColor,
-              ),
+                  shape: _shape,
+                  color: isDisabled
+                      ? Colors.grey
+                      : Theme.of(context).colorScheme.secondary),
               child: loading
                   ? const Center(
                       child: SizedBox(
