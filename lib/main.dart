@@ -8,12 +8,14 @@ import 'package:front_end/globals/theme/theme.dart';
 import 'package:front_end/provider/shared_utility.dart';
 import 'package:front_end/screens/Password%20Reset/password_reset.dart';
 import 'package:front_end/screens/auth/Auth.dart';
+import 'package:front_end/screens/deposit/deposit_page.dart';
 import 'package:front_end/screens/home/home.dart';
 import 'package:front_end/screens/auth/login.dart';
 import 'package:front_end/screens/intro/onboarding.dart';
 import 'package:front_end/screens/signup/signup_address.dart';
 import 'package:front_end/screens/signup/signup_personal.dart';
 import 'package:front_end/screens/signup/signup_stepper.dart';
+import 'package:camera/camera.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,6 +29,8 @@ late final FirebaseAuth auth;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // initializing camera
+
 // We store the app and auth to make testing with a named instance easier.
   app = await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -35,7 +39,7 @@ void main() async {
   runApp(ProviderScope(overrides: [
     // override the previous value with the new object
     sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-  ], child: const MyApp()));
+  ], child: MyApp()));
 }
 
 class MyApp extends ConsumerStatefulWidget {
@@ -69,9 +73,10 @@ class MyAppState extends ConsumerState<MyApp> {
           GoRoute(
             path: '/',
             builder: (BuildContext context, GoRouterState state) {
-              return ref.watch(sharedUtilityProvider).isFirstTime()
-                  ? const Onboarding()
-                  : const Auth();
+              // return ref.watch(sharedUtilityProvider).isFirstTime()
+              //     ? const Onboarding()
+              //     : const Auth();
+              return Deposite_page();
             },
           ),
           //    /products

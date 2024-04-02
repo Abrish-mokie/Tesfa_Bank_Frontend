@@ -88,6 +88,8 @@ dependencies:
 
   #For creating OTP verification screen
   pinput: ^3.0.1
+  camera: ^0.10.5+9
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_test:
