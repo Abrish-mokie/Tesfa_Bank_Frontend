@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:front_end/provider/deposit/deposit_provider.dart';
 import 'package:front_end/widgets/custom_button.dart';
@@ -36,12 +34,12 @@ class DepositDisplay extends ConsumerWidget {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text('Put the check inside the box'),
+        title: const Text('Put the check inside the box'),
         leading: IconButton(
           onPressed: () {
             context.go('/deposit_camera');
           },
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
         ),
         centerTitle: true,
       ),
@@ -50,8 +48,8 @@ class DepositDisplay extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('No image'),
-                  SizedBox(
+                  const Text('No image'),
+                  const SizedBox(
                     height: 20,
                   ),
                   CustomButton(
@@ -66,7 +64,7 @@ class DepositDisplay extends ConsumerWidget {
               children: [
                 Positioned.fill(
                   child: Image.file(
-                    File(location!.path),
+                    File(location.path),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -76,7 +74,7 @@ class DepositDisplay extends ConsumerWidget {
                   left: 0,
                   child: Container(
                     width: oneTenthWidth,
-                    color: Color.fromARGB(220, 178, 169, 169),
+                    color: const Color.fromARGB(220, 178, 169, 169),
                   ),
                 ),
                 Positioned(
@@ -85,7 +83,7 @@ class DepositDisplay extends ConsumerWidget {
                   left: oneTenthWidth,
                   child: Container(
                     height: oneTenthWidth,
-                    color: Color.fromARGB(220, 178, 169, 169),
+                    color: const Color.fromARGB(220, 178, 169, 169),
                   ),
                 ),
                 Positioned(
@@ -94,7 +92,7 @@ class DepositDisplay extends ConsumerWidget {
                   right: 0,
                   child: Container(
                     width: oneTenthWidth,
-                    color: Color.fromARGB(220, 178, 169, 169),
+                    color: const Color.fromARGB(220, 178, 169, 169),
                   ),
                 ),
                 Positioned(
@@ -103,7 +101,7 @@ class DepositDisplay extends ConsumerWidget {
                   right: oneTenthWidth,
                   child: Container(
                     height: oneTenthWidth,
-                    color: Color.fromARGB(220, 178, 169, 169),
+                    color: const Color.fromARGB(220, 178, 169, 169),
                   ),
                 ),
                 Positioned(
@@ -127,7 +125,7 @@ class DepositDisplay extends ConsumerWidget {
                           onPressed: () {
                             context.go('/deposit_second');
                           },
-                          child: Icon(Icons.done),
+                          child: const Icon(Icons.done),
                         ),
                         ElevatedButton(
                           onPressed: () {
@@ -139,7 +137,7 @@ class DepositDisplay extends ConsumerWidget {
                               context.go('/deposit_camera');
                             }
                           },
-                          child: Icon(Icons.remove_circle_outline_sharp),
+                          child: const Icon(Icons.remove_circle_outline_sharp),
                         ),
                       ],
                     ),
@@ -148,6 +146,5 @@ class DepositDisplay extends ConsumerWidget {
               ],
             ),
     );
-    ;
   }
 }

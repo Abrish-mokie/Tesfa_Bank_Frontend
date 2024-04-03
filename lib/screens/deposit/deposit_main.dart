@@ -1,6 +1,4 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:front_end/screens/deposit/deposit_second.dart';
 import 'package:go_router/go_router.dart';
 
 class DepositMain extends StatelessWidget {
@@ -10,23 +8,23 @@ class DepositMain extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Deposit Check'),
+        title: const Text('Deposit Check'),
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
             context.go('/dashboard');
           },
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
         ),
       ),
       body: Container(
-        margin: EdgeInsets.only(top: 35),
+        margin: const EdgeInsets.only(top: 35),
         child: Column(
           children: [
             GestureDetector(
               onTap: () => context.go("/deposit_second"),
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
+                margin: const EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.black),
                     borderRadius: BorderRadius.circular(8)),
@@ -56,13 +54,13 @@ class DepositMain extends StatelessWidget {
                 ]),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 25,
             ),
             GestureDetector(
               onTap: () {},
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 20),
+                margin: const EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.black),
                     borderRadius: BorderRadius.circular(8)),

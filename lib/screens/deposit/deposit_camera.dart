@@ -1,23 +1,20 @@
 import 'dart:io';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:front_end/provider/deposit/deposit_provider.dart';
-import 'package:front_end/screens/deposit/deposit_display.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DepositCamera extends ConsumerStatefulWidget {
-  DepositCamera({super.key, required this.cameras});
+  const DepositCamera({super.key, required this.cameras});
 
   final List<CameraDescription> cameras;
 
   @override
-  _DepositCameraState createState() => _DepositCameraState();
+  DepositCameraState createState() => DepositCameraState();
 }
 
-class _DepositCameraState extends ConsumerState<DepositCamera> {
+class DepositCameraState extends ConsumerState<DepositCamera> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   bool _isFlashOn = true;
@@ -53,12 +50,8 @@ class _DepositCameraState extends ConsumerState<DepositCamera> {
       } else if (whichCheckprovided == 2) {
         ref.read(checkBack.notifier).state = File(picture.path);
       }
-      print('Which ${whichCheckprovided}');
       context.go('/deposit_display');
-      // Navigator.pop(context);
-      // print('Camera screen: \n${picture.path}');
     } catch (e) {
-      print('Error taking picture: $e');
       context.go('deposit_second');
     }
   }
@@ -75,10 +68,10 @@ class _DepositCameraState extends ConsumerState<DepositCamera> {
                   onPressed: () {
                     context.go('/deposit_second');
                   },
-                  icon: Icon(Icons.arrow_back),
+                  icon: const Icon(Icons.arrow_back),
                 ),
               ),
-              body: Center(child: CircularProgressIndicator()),
+              body: const Center(child: CircularProgressIndicator()),
             );
           } else if (snapshot.hasError) {
             return Scaffold(
@@ -87,7 +80,7 @@ class _DepositCameraState extends ConsumerState<DepositCamera> {
                   onPressed: () {
                     context.go('/deposit_second');
                   },
-                  icon: Icon(Icons.arrow_back),
+                  icon: const Icon(Icons.arrow_back),
                 ),
               ),
               body: Center(child: Text('Error: ${snapshot.error}')),
@@ -97,12 +90,12 @@ class _DepositCameraState extends ConsumerState<DepositCamera> {
 
             return Scaffold(
               appBar: AppBar(
-                title: Text('Put the check inside the box'),
+                title: const Text('Put the check inside the box'),
                 leading: IconButton(
                   onPressed: () {
                     context.go('/deposit_second');
                   },
-                  icon: Icon(Icons.arrow_back),
+                  icon: const Icon(Icons.arrow_back),
                 ),
                 centerTitle: true,
               ),
@@ -120,7 +113,7 @@ class _DepositCameraState extends ConsumerState<DepositCamera> {
                     left: 0,
                     child: Container(
                       width: oneTenthWidth,
-                      color: Color.fromARGB(220, 178, 169, 169),
+                      color: const Color.fromARGB(220, 178, 169, 169),
                     ),
                   ),
                   Positioned(
@@ -129,7 +122,7 @@ class _DepositCameraState extends ConsumerState<DepositCamera> {
                     left: oneTenthWidth,
                     child: Container(
                       height: oneTenthWidth,
-                      color: Color.fromARGB(220, 178, 169, 169),
+                      color: const Color.fromARGB(220, 178, 169, 169),
                     ),
                   ),
                   Positioned(
@@ -138,7 +131,7 @@ class _DepositCameraState extends ConsumerState<DepositCamera> {
                     right: 0,
                     child: Container(
                       width: oneTenthWidth,
-                      color: Color.fromARGB(220, 178, 169, 169),
+                      color: const Color.fromARGB(220, 178, 169, 169),
                     ),
                   ),
                   Positioned(
@@ -147,7 +140,7 @@ class _DepositCameraState extends ConsumerState<DepositCamera> {
                     right: oneTenthWidth,
                     child: Container(
                       height: oneTenthWidth,
-                      color: Color.fromARGB(220, 178, 169, 169),
+                      color: const Color.fromARGB(220, 178, 169, 169),
                     ),
                   ),
                   Positioned(
@@ -169,13 +162,13 @@ class _DepositCameraState extends ConsumerState<DepositCamera> {
                         children: [
                           ElevatedButton(
                             onPressed: takePicture,
-                            child: Icon(Icons.camera),
+                            child: const Icon(Icons.camera),
                           ),
                           ElevatedButton(
                               onPressed: _toggleFlash,
                               child: _isFlashOn
-                                  ? Icon(Icons.flash_on)
-                                  : Icon(Icons.flash_off))
+                                  ? const Icon(Icons.flash_on)
+                                  : const Icon(Icons.flash_off))
                         ],
                       ),
                     ),

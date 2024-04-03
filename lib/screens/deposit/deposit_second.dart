@@ -1,15 +1,12 @@
 import 'dart:io';
 
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front_end/provider/deposit/deposit_provider.dart';
-import 'package:front_end/screens/deposit/deposit_camera.dart';
 import 'package:front_end/widgets/custom_button.dart';
 import 'package:front_end/widgets/custom_snacbar.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart';
 
 class DepositSecond extends ConsumerStatefulWidget {
   const DepositSecond({super.key});
@@ -48,7 +45,6 @@ class _DepositSecondState extends ConsumerState<DepositSecond> {
         ref.read(amount.notifier).state == null ||
         ref.read(checkBack.notifier).state == null ||
         ref.read(checkFront.notifier).state == null);
-    print('submitted bool ${boll}');
 
     if (ref.read(account.notifier).state == null ||
         ref.read(amount.notifier).state == null ||
@@ -75,7 +71,7 @@ class _DepositSecondState extends ConsumerState<DepositSecond> {
       ScaffoldMessenger.of(context).showSnackBar(
         customSnackBar(
           'Submitted',
-          Duration(seconds: 5),
+          const Duration(seconds: 5),
         ),
       );
     }
@@ -98,171 +94,170 @@ class _DepositSecondState extends ConsumerState<DepositSecond> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Deposit'),
-          centerTitle: true,
-          leading: IconButton(
-            onPressed: () {
-              context.go('/deposit_main');
-            },
-            icon: Icon(Icons.arrow_back),
+      appBar: AppBar(
+        title: const Text('Deposit'),
+        centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            context.go('/deposit_main');
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DropdownButton(
+                isExpanded: true,
+                hint: const Text('Select an account'),
+                value: ref.read(account.notifier).state ?? selectedAccount,
+                items: accountList.map((account) {
+                  return DropdownMenuItem(
+                    value: account,
+                    child: Text(account),
+                  );
+                }).toList(),
+                onChanged: (accountValue) {
+                  setState(
+                    () {
+                      ref.read(account.notifier).state = accountValue;
+                    },
+                  );
+                },
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              TextField(
+                controller: amountController,
+                decoration: InputDecoration(
+                  hintText: 'Amount \$',
+                  border: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.black),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                onChanged: (value) {
+                  ref.read(amount.notifier).state =
+                      value.isEmpty ? null : int.parse(value);
+                },
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              TextField(
+                controller: memoController,
+                maxLines: 4,
+                decoration: InputDecoration(
+                  hintText: 'Memo (Optional)',
+                  border: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.black),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                onChanged: (value) {
+                  ref.read(memo.notifier).state = value;
+                },
+              ),
+              const SizedBox(
+                height: 40,
+              ),
+              const Center(
+                  child: Text(
+                'Take pictures of Cheques',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              )),
+              const SizedBox(
+                height: 30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8.0),
+                        child: IconButton(
+                          onPressed: () {
+                            if (frontCheck != null) {
+                              ref.read(toCheck.notifier).state = true;
+                              ref.read(whichCheck.notifier).state = 1;
+                              context.go('/deposit_display');
+                            } else {
+                              ref.read(whichCheck.notifier).state = 1;
+                              context.go('/deposit_camera');
+                            }
+                          },
+                          icon: frontCheck == null
+                              ? const Icon(Icons.camera_alt, size: 30)
+                              : Image.file(
+                                  frontCheck!,
+                                  height: 50,
+                                  width: 50,
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      const Text('Front')
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8.0),
+                        child: IconButton(
+                          onPressed: () {
+                            if (backCheck != null) {
+                              ref.read(toCheck.notifier).state = true;
+                              ref.read(whichCheck.notifier).state = 2;
+                              context.go('/deposit_display');
+                            } else {
+                              ref.read(whichCheck.notifier).state = 2;
+                              context.go('/deposit_camera');
+                            }
+                          },
+                          icon: backCheck == null
+                              ? const Icon(Icons.camera_alt, size: 30)
+                              : Image.file(
+                                  backCheck!,
+                                  height: 50,
+                                  width: 50,
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      const Text('Back')
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 90,
+              ),
+              CustomButton(
+                onPressed: submit,
+                title: 'Continue',
+                width: double.infinity,
+                isDisabled: false,
+              ),
+              const SizedBox(
+                height: 25,
+              )
+            ],
           ),
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DropdownButton(
-                  isExpanded: true,
-                  hint: Text('Select an account'),
-                  value: ref.read(account.notifier).state != null
-                      ? ref.read(account.notifier).state
-                      : selectedAccount,
-                  items: accountList.map((account) {
-                    return DropdownMenuItem(
-                      child: Text(account),
-                      value: account,
-                    );
-                  }).toList(),
-                  onChanged: (accountValue) {
-                    setState(
-                      () {
-                        ref.read(account.notifier).state = accountValue;
-                      },
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                TextField(
-                  controller: amountController,
-                  decoration: InputDecoration(
-                    hintText: 'Amount \$',
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  onChanged: (value) {
-                    ref.read(amount.notifier).state =
-                        value.isEmpty ? null : int.parse(value);
-                  },
-                ),
-                const SizedBox(
-                  height: 25,
-                ),
-                TextField(
-                  controller: memoController,
-                  maxLines: 4,
-                  decoration: InputDecoration(
-                    hintText: 'Memo (Optional)',
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onChanged: (value) {
-                    ref.read(memo.notifier).state = value;
-                  },
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                const Center(
-                    child: Text(
-                  'Take pictures of Cheques',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                )),
-                const SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8.0),
-                          child: IconButton(
-                            onPressed: () {
-                              if (frontCheck != null) {
-                                ref.read(toCheck.notifier).state = true;
-                                ref.read(whichCheck.notifier).state = 1;
-                                context.go('/deposit_display');
-                              } else {
-                                ref.read(whichCheck.notifier).state = 1;
-                                context.go('/deposit_camera');
-                              }
-                            },
-                            icon: frontCheck == null
-                                ? const Icon(Icons.camera_alt, size: 30)
-                                : Image.file(
-                                    frontCheck!,
-                                    height: 50,
-                                    width: 50,
-                                    fit: BoxFit.cover,
-                                  ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text('Front')
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8.0),
-                          child: IconButton(
-                            onPressed: () {
-                              if (backCheck != null) {
-                                ref.read(toCheck.notifier).state = true;
-                                ref.read(whichCheck.notifier).state = 2;
-                                context.go('/deposit_display');
-                              } else {
-                                ref.read(whichCheck.notifier).state = 2;
-                                context.go('/deposit_camera');
-                              }
-                            },
-                            icon: backCheck == null
-                                ? Icon(Icons.camera_alt, size: 30)
-                                : Image.file(
-                                    backCheck!,
-                                    height: 50,
-                                    width: 50,
-                                    fit: BoxFit.cover,
-                                  ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text('Back')
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 90,
-                ),
-                CustomButton(
-                  onPressed: submit,
-                  title: 'Continue',
-                  width: double.infinity,
-                  isDisabled: false,
-                ),
-                SizedBox(
-                  height: 25,
-                )
-              ],
-            ),
-          ),
-        ));
+      ),
+    );
   }
 }
