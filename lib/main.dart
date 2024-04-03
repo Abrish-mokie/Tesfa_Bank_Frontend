@@ -83,10 +83,9 @@ class MyAppState extends ConsumerState<MyApp> {
           GoRoute(
             path: '/',
             builder: (BuildContext context, GoRouterState state) {
-              // return ref.watch(sharedUtilityProvider).isFirstTime()
-              //     ? const Onboarding()
-              //     : const Auth();
-              return DepositMain();
+              return ref.watch(sharedUtilityProvider).isFirstTime()
+                  ? const Onboarding()
+                  : const Auth();
             },
           ),
           //    /products
