@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:front_end/widgets/custom_button.dart';
+import 'package:front_end/widgets/custom_snacbar.dart';
 import 'package:front_end/widgets/custom_text_field.dart';
 import 'package:go_router/go_router.dart';
 
@@ -28,16 +29,6 @@ class _PasswordResetFirebaseState extends State<PasswordResetFirebase> {
   void dispose() {
     _emailController.dispose();
     super.dispose();
-  }
-
-  SnackBar customSnackBar(String text, Duration duration) {
-    return SnackBar(
-      content: Text(
-        text,
-        textAlign: TextAlign.center,
-      ),
-      duration: duration,
-    );
   }
 
   Future passwordReset() async {

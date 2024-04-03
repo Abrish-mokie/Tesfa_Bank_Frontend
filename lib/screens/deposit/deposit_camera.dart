@@ -3,20 +3,21 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:front_end/screens/deposit/display_picture.dart';
+import 'package:front_end/provider/deposit/deposit_provider.dart';
+import 'package:front_end/screens/deposit/deposit_display.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class CameraScreen extends StatefulWidget {
-  CameraScreen({super.key, required this.cameras, required this.onPicked});
+class DepositCamera extends ConsumerStatefulWidget {
+  DepositCamera({super.key, required this.cameras});
 
   final List<CameraDescription> cameras;
 
-  final void Function(File? image) onPicked;
-
   @override
-  _CameraScreenState createState() => _CameraScreenState();
+  _DepositCameraState createState() => _DepositCameraState();
 }
 
-class _CameraScreenState extends State<CameraScreen> {
+class _DepositCameraState extends ConsumerState<DepositCamera> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   bool _isFlashOn = true;
@@ -46,22 +47,19 @@ class _CameraScreenState extends State<CameraScreen> {
   void takePicture() async {
     try {
       XFile? picture = await _controller.takePicture();
-      // Do something with the captured picture (e.g., save it, display it)
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => DisplayPicture(
-            location: picture,
-            check: (image) {
-              picture = image;
-            },
-          ),
-        ),
-      );
-      widget.onPicked(picture == null ? null : File(picture!.path));
+      final whichCheckprovided = ref.read(whichCheck);
+      if (whichCheckprovided == 1) {
+        ref.read(checkFront.notifier).state = File(picture.path);
+      } else if (whichCheckprovided == 2) {
+        ref.read(checkBack.notifier).state = File(picture.path);
+      }
+      print('Which ${whichCheckprovided}');
+      context.go('/deposit_display');
       // Navigator.pop(context);
       // print('Camera screen: \n${picture.path}');
     } catch (e) {
       print('Error taking picture: $e');
+      context.go('deposit_second');
     }
   }
 
@@ -72,12 +70,26 @@ class _CameraScreenState extends State<CameraScreen> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Scaffold(
-              appBar: AppBar(),
+              appBar: AppBar(
+                leading: IconButton(
+                  onPressed: () {
+                    context.go('/deposit_second');
+                  },
+                  icon: Icon(Icons.arrow_back),
+                ),
+              ),
               body: Center(child: CircularProgressIndicator()),
             );
           } else if (snapshot.hasError) {
             return Scaffold(
-              appBar: AppBar(),
+              appBar: AppBar(
+                leading: IconButton(
+                  onPressed: () {
+                    context.go('/deposit_second');
+                  },
+                  icon: Icon(Icons.arrow_back),
+                ),
+              ),
               body: Center(child: Text('Error: ${snapshot.error}')),
             );
           } else {
@@ -86,6 +98,12 @@ class _CameraScreenState extends State<CameraScreen> {
             return Scaffold(
               appBar: AppBar(
                 title: Text('Put the check inside the box'),
+                leading: IconButton(
+                  onPressed: () {
+                    context.go('/deposit_second');
+                  },
+                  icon: Icon(Icons.arrow_back),
+                ),
                 centerTitle: true,
               ),
               body: Stack(

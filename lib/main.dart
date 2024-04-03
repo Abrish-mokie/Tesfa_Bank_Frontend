@@ -8,7 +8,10 @@ import 'package:front_end/globals/theme/theme.dart';
 import 'package:front_end/provider/shared_utility.dart';
 import 'package:front_end/screens/Password%20Reset/password_reset.dart';
 import 'package:front_end/screens/auth/Auth.dart';
-import 'package:front_end/screens/deposit/deposit_page.dart';
+import 'package:front_end/screens/deposit/deposit_camera.dart';
+import 'package:front_end/screens/deposit/deposit_display.dart';
+import 'package:front_end/screens/deposit/deposit_main.dart';
+import 'package:front_end/screens/deposit/deposit_second.dart';
 import 'package:front_end/screens/home/home.dart';
 import 'package:front_end/screens/auth/login.dart';
 import 'package:front_end/screens/intro/onboarding.dart';
@@ -30,20 +33,27 @@ late final FirebaseAuth auth;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // initializing camera
+  final cameraList = await availableCameras();
 
 // We store the app and auth to make testing with a named instance easier.
   app = await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   final sharedPreferences = await SharedPreferences.getInstance();
-  runApp(ProviderScope(overrides: [
-    // override the previous value with the new object
-    sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-  ], child: MyApp()));
+  runApp(ProviderScope(
+      overrides: [
+        // override the previous value with the new object
+        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+      ],
+      child: MyApp(
+        cameraList: cameraList,
+      )));
 }
 
 class MyApp extends ConsumerStatefulWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.cameraList});
+
+  final List<CameraDescription> cameraList;
 
   @override
   MyAppState createState() => MyAppState();
@@ -76,7 +86,7 @@ class MyAppState extends ConsumerState<MyApp> {
               // return ref.watch(sharedUtilityProvider).isFirstTime()
               //     ? const Onboarding()
               //     : const Auth();
-              return Deposite_page();
+              return DepositMain();
             },
           ),
           //    /products
@@ -128,6 +138,32 @@ class MyAppState extends ConsumerState<MyApp> {
             path: '/onboarding',
             builder: (BuildContext context, GoRouterState state) {
               return const Onboarding();
+            },
+          ),
+          GoRoute(
+            path: '/deposit_main',
+            builder: (BuildContext context, GoRouterState state) {
+              return const DepositMain();
+            },
+          ),
+          GoRoute(
+            path: '/deposit_second',
+            builder: (BuildContext context, GoRouterState state) {
+              return const DepositSecond();
+            },
+          ),
+          GoRoute(
+            path: '/deposit_camera',
+            builder: (BuildContext context, GoRouterState state) {
+              return DepositCamera(
+                cameras: widget.cameraList,
+              );
+            },
+          ),
+          GoRoute(
+            path: '/deposit_display',
+            builder: (BuildContext context, GoRouterState state) {
+              return const DepositDisplay();
             },
           ),
         ],

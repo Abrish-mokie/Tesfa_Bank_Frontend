@@ -4,75 +4,109 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:front_end/screens/deposit/camera_screen.dart';
+import 'package:front_end/provider/deposit/deposit_provider.dart';
+import 'package:front_end/screens/deposit/deposit_camera.dart';
 import 'package:front_end/widgets/custom_button.dart';
+import 'package:front_end/widgets/custom_snacbar.dart';
+import 'package:go_router/go_router.dart';
+import 'package:http/http.dart';
 
-class AccountChoose extends StatefulWidget {
-  const AccountChoose({super.key});
+class DepositSecond extends ConsumerStatefulWidget {
+  const DepositSecond({super.key});
 
   @override
-  State<AccountChoose> createState() => _AccountChooseState();
+  ConsumerState<DepositSecond> createState() => _DepositSecondState();
 }
 
-class _AccountChooseState extends State<AccountChoose> {
+class _DepositSecondState extends ConsumerState<DepositSecond> {
   // selected account
   String? selectedAccount;
   // Drop down items
   List<String> accountList = ['Chequing Account', 'Saving Account'];
 
   // controller for the amount text field
-  TextEditingController amount = TextEditingController();
+  TextEditingController amountController = TextEditingController();
 
   // controller for the amount text field
-  TextEditingController memo = TextEditingController();
+  TextEditingController memoController = TextEditingController();
 
   // File for storing paycheck front side
-  File? checkFront;
+  File? frontCheck;
 
   // File for storing paycheck back side
-  File? checkBack;
-
-  late final cameras = availableCameras().then((value) => value);
-
-  void cameraController(BuildContext context, bool isFront) async {
-    final cameraList = await cameras;
-
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        settings: const RouteSettings(name: "camera"),
-        builder: (context) => CameraScreen(
-          cameras: cameraList,
-          onPicked: (File? image) {
-            if (image != null) {
-              setState(
-                () {
-                  if (isFront) {
-                    checkFront = image;
-                  } else {
-                    checkBack = image;
-                  }
-                },
-              );
-            }
-          },
-        ),
-      ),
-    );
-  }
+  File? backCheck;
 
   @override
   void dispose() {
-    amount.dispose();
-    memo.dispose();
+    amountController.dispose();
+    memoController.dispose();
     super.dispose();
+  }
+
+  void submit() {
+    var boll = (ref.read(account.notifier).state == null ||
+        ref.read(amount.notifier).state == null ||
+        ref.read(checkBack.notifier).state == null ||
+        ref.read(checkFront.notifier).state == null);
+    print('submitted bool ${boll}');
+
+    if (ref.read(account.notifier).state == null ||
+        ref.read(amount.notifier).state == null ||
+        ref.read(checkBack.notifier).state == null ||
+        ref.read(checkFront.notifier).state == null) {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                content: const Text(
+                    'Please fill all of the fields as well as the pictures'),
+                actions: [
+                  ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Ok'))
+                ],
+              ));
+    } else {
+      ref.read(account.notifier).state = null;
+      ref.read(amount.notifier).state = null;
+      ref.read(checkBack.notifier).state = null;
+      ref.read(checkFront.notifier).state = null;
+      ref.read(memo.notifier).state = null;
+      context.go('/deposit_main');
+      ScaffoldMessenger.of(context).showSnackBar(
+        customSnackBar(
+          'Submitted',
+          Duration(seconds: 5),
+        ),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    if (ref.read(amount.notifier).state != null) {
+      amountController.text = ref.read(amount.notifier).state.toString();
+    }
+    if (ref.read(memo.notifier).state != null) {
+      memoController.text = ref.read(memo.notifier).state.toString();
+    }
+
+    backCheck = ref.read(checkBack);
+    frontCheck = ref.read(checkFront);
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Deposit'),
+          title: const Text('Deposit'),
           centerTitle: true,
+          leading: IconButton(
+            onPressed: () {
+              context.go('/deposit_main');
+            },
+            icon: Icon(Icons.arrow_back),
+          ),
         ),
         body: SingleChildScrollView(
           child: Container(
@@ -83,17 +117,19 @@ class _AccountChooseState extends State<AccountChoose> {
                 DropdownButton(
                   isExpanded: true,
                   hint: Text('Select an account'),
-                  value: selectedAccount,
+                  value: ref.read(account.notifier).state != null
+                      ? ref.read(account.notifier).state
+                      : selectedAccount,
                   items: accountList.map((account) {
                     return DropdownMenuItem(
                       child: Text(account),
                       value: account,
                     );
                   }).toList(),
-                  onChanged: (account) {
+                  onChanged: (accountValue) {
                     setState(
                       () {
-                        selectedAccount = account;
+                        ref.read(account.notifier).state = accountValue;
                       },
                     );
                   },
@@ -102,7 +138,7 @@ class _AccountChooseState extends State<AccountChoose> {
                   height: 25,
                 ),
                 TextField(
-                  controller: amount,
+                  controller: amountController,
                   decoration: InputDecoration(
                     hintText: 'Amount \$',
                     border: OutlineInputBorder(
@@ -112,12 +148,16 @@ class _AccountChooseState extends State<AccountChoose> {
                   ),
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  onChanged: (value) {
+                    ref.read(amount.notifier).state =
+                        value.isEmpty ? null : int.parse(value);
+                  },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 25,
                 ),
                 TextField(
-                  controller: memo,
+                  controller: memoController,
                   maxLines: 4,
                   decoration: InputDecoration(
                     hintText: 'Memo (Optional)',
@@ -126,16 +166,19 @@ class _AccountChooseState extends State<AccountChoose> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
+                  onChanged: (value) {
+                    ref.read(memo.notifier).state = value;
+                  },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 40,
                 ),
-                Center(
+                const Center(
                     child: Text(
                   'Take pictures of Cheques',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 )),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 Row(
@@ -147,19 +190,26 @@ class _AccountChooseState extends State<AccountChoose> {
                           padding: const EdgeInsets.all(8.0),
                           child: IconButton(
                             onPressed: () {
-                              cameraController(context, false);
+                              if (frontCheck != null) {
+                                ref.read(toCheck.notifier).state = true;
+                                ref.read(whichCheck.notifier).state = 1;
+                                context.go('/deposit_display');
+                              } else {
+                                ref.read(whichCheck.notifier).state = 1;
+                                context.go('/deposit_camera');
+                              }
                             },
-                            icon: checkBack == null
-                                ? Icon(Icons.camera_alt, size: 30)
+                            icon: frontCheck == null
+                                ? const Icon(Icons.camera_alt, size: 30)
                                 : Image.file(
-                                    checkBack!,
+                                    frontCheck!,
                                     height: 50,
                                     width: 50,
                                     fit: BoxFit.cover,
                                   ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
                         Text('Front')
@@ -171,12 +221,19 @@ class _AccountChooseState extends State<AccountChoose> {
                           padding: const EdgeInsets.all(8.0),
                           child: IconButton(
                             onPressed: () {
-                              cameraController(context, true);
+                              if (backCheck != null) {
+                                ref.read(toCheck.notifier).state = true;
+                                ref.read(whichCheck.notifier).state = 2;
+                                context.go('/deposit_display');
+                              } else {
+                                ref.read(whichCheck.notifier).state = 2;
+                                context.go('/deposit_camera');
+                              }
                             },
-                            icon: checkFront == null
+                            icon: backCheck == null
                                 ? Icon(Icons.camera_alt, size: 30)
                                 : Image.file(
-                                    checkFront!,
+                                    backCheck!,
                                     height: 50,
                                     width: 50,
                                     fit: BoxFit.cover,
@@ -195,7 +252,7 @@ class _AccountChooseState extends State<AccountChoose> {
                   height: 90,
                 ),
                 CustomButton(
-                  onPressed: () {},
+                  onPressed: submit,
                   title: 'Continue',
                   width: double.infinity,
                   isDisabled: false,

@@ -2,34 +2,72 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:front_end/provider/deposit/deposit_provider.dart';
+import 'package:front_end/widgets/custom_button.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class DisplayPicture extends StatelessWidget {
-  const DisplayPicture(
-      {super.key, required this.location, required this.check});
+class DepositDisplay extends ConsumerWidget {
+  const DepositDisplay({super.key});
+  // {super.key, required this.location, required this.check});
 
-  final XFile? location;
+  // final XFile? location;
 
-  final Function(XFile? image) check;
+  // final Function(XFile? image) check;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     double oneTenthWidth = MediaQuery.of(context).size.width * 0.2;
+    void delete() {
+      if (ref.read(whichCheck) == 1) {
+        ref.read(checkFront.notifier).state = null;
+      } else if (ref.read(whichCheck) == 2) {
+        ref.read(checkBack.notifier).state = null;
+      }
+    }
 
+    File? location;
+    if (ref.read(whichCheck) == 1) {
+      location = ref.read(checkFront);
+    } else if (ref.read(whichCheck) == 2) {
+      location = ref.read(checkBack);
+    } else {
+      location = null;
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text('Put the check inside the box'),
+        leading: IconButton(
+          onPressed: () {
+            context.go('/deposit_camera');
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
         centerTitle: true,
       ),
       body: location == null
           ? Center(
-              child: Text('No image'),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('No image'),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  CustomButton(
+                    isDisabled: false,
+                    title: 'Return',
+                    onPressed: () => context.go('/deposit_second'),
+                  )
+                ],
+              ),
             )
           : Stack(
               children: [
                 Positioned.fill(
-                  child: AspectRatio(
-                    aspectRatio: 3 / 4,
-                    child: Image.file(File(location!.path)),
+                  child: Image.file(
+                    File(location!.path),
+                    fit: BoxFit.cover,
                   ),
                 ),
                 Positioned(
@@ -87,19 +125,19 @@ class DisplayPicture extends StatelessWidget {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            check(location);
-                            Navigator.of(context).popUntil(
-                              (route) {
-                                return route.settings.name == 'camera';
-                              },
-                            );
+                            context.go('/deposit_second');
                           },
                           child: Icon(Icons.done),
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            check(null);
-                            Navigator.pop(context);
+                            delete();
+                            if (ref.read(toCheck)) {
+                              ref.read(toCheck.notifier).state = false;
+                              context.go('/deposit_second');
+                            } else {
+                              context.go('/deposit_camera');
+                            }
                           },
                           child: Icon(Icons.remove_circle_outline_sharp),
                         ),
